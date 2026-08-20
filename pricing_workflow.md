@@ -18,17 +18,15 @@ flowchart LR
     E --> F
 ```
 
----
+---### Pillar 1: Ingestion & Data Conversion (Couchbase / Ingested JSON & Documents)
 
-### Pillar 1: Database Ingestion & Data Conversion (JSON & Documents)
-
-Customers rarely ingest only PDF files; they frequently ingest **millions of records from external databases (PostgreSQL, Oracle, SQL Server, MongoDB, Snowflake)** serialized into JSON, alongside unstructured documents.
+Customers frequently vectorize **millions of records from Couchbase or external databases** serialized into JSON, alongside unstructured documents.
 
 | Ingestion Source | Record / File Size | Units per 1 GiB | Chunks & Vectors per Unit | Workflow Ingestion Rate |
 |---|---|---|---|---|
-| **Small DB Records (JSON)** (e.g. Transactions, Audit logs) | **1 KB** / doc | **~1,048,576 records / GiB** | 1 vector per record (128–256 tokens) | **0.05 credits / GiB** ($0.09 / GiB) |
-| **Standard DB Records (JSON)** (e.g. Customer 360, Profiles) | **2 KB** / doc | **~524,288 records / GiB** | 1 vector per record (256–512 tokens) | **0.05 credits / GiB** ($0.09 / GiB) |
-| **Large DB Documents (JSON)** (e.g. Case files, Product catalogs)| **5 KB** / doc | **~209,715 records / GiB** | 1–2 vectors per record (512–1024 tokens)| **0.05 credits / GiB** ($0.09 / GiB) |
+| **Small Ingested Records (JSON)** (e.g. Transactions, Audit logs) | **1 KB** / doc | **~1,048,576 records / GiB** | 1 vector per record (128–256 tokens) | **0.05 credits / GiB** ($0.09 / GiB) |
+| **Standard Ingested Records (JSON)** (e.g. Customer 360, Profiles) | **2 KB** / doc | **~524,288 records / GiB** | 1 vector per record (256–512 tokens) | **0.05 credits / GiB** ($0.09 / GiB) |
+| **Large Ingested Documents (JSON)** (e.g. Case files, Product catalogs)| **5 KB** / doc | **~209,715 records / GiB** | 1–2 vectors per record (512–1024 tokens)| **0.05 credits / GiB** ($0.09 / GiB) |
 | **Native Capella Data** (Stored in Couchbase buckets) | Any JSON size | Unlimited | 1 vector per record / chunk | **100% FREE (0.00 credits)** |
 | **PDF Documents / Reports** | ~75 KB / page | ~12,500 pages / GiB | ~1.2 vectors per page (512-token chunks) | **15.625 credits / 1K pages** ($27.34 / 1K pgs) |
 | **Scanned OCR / Image Docs** | ~300 KB / page | ~3,000 pages / GiB | ~1 vector per page | **15.625 credits / 1K pages** ($27.34 / 1K pgs) |
@@ -65,9 +63,9 @@ Compute sizing is dictated by two independent hardware bottlenecks: **Embedding 
 
 ---
 
-### Pillar 3: Sizing Database Migration & Real-Time CDC (Postgres/Oracle $\rightarrow$ Capella)
+### Pillar 3: Sizing Ingestion, Bulk Backfills & Real-Time CDC in Capella
 
-When sizing a customer migrating/replicating a database table into Capella AI:
+When sizing an ingestion workload or database migration into Capella AI:
 
 #### Step-by-Step Sizing Equation:
 1. **Initial Table Ingestion Fee (Workflow Credits)**:

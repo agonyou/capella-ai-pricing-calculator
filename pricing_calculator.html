@@ -157,11 +157,11 @@
       <!-- Advisor Inputs Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs mb-4">
         
-        <!-- Input 1: External Database Records (JSON) -->
+        <!-- Input 1: Ingested / Couchbase JSON Records -->
         <div class="bg-white dark:bg-slate-900/90 p-3.5 rounded-lg border border-slate-200 dark:border-slate-800 space-y-1.5 shadow-sm">
           <label class="font-semibold text-slate-700 dark:text-slate-300 flex items-center justify-between">
-            <span>Database Records (JSON)</span>
-            <span class="text-slate-500 text-[10px]">Postgres / Mongo / SQL</span>
+            <span>Couchbase / Ingested JSON</span>
+            <span class="text-slate-500 text-[10px]">JSON Records / Docs</span>
           </label>
           <div class="flex items-center gap-2">
             <input type="number" id="advDBRecords" value="5000000" oninput="updateAdvisorMetrics()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-md px-2.5 py-1.5 font-mono text-xs font-bold focus:outline-none focus:border-red-500" placeholder="5000000">
