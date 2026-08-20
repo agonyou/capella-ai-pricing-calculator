@@ -20,17 +20,41 @@ import webbrowser
 DEFAULT_PORT = 8080
 DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 
+FAVICON_SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="20" fill="#EA2328"/>
+  <text x="50" y="70" font-size="65" font-family="Arial, Helvetica, sans-serif" font-weight="bold" fill="#ffffff" text-anchor="middle">C</text>
+</svg>""".encode("utf-8")
 
-class Handler(http.server.SimpleHTTPRequestHandler):
+
+class CapellaWebUIHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=DIRECTORY, **kwargs)
 
+    def do_GET(self):
+        # Route root '/' directly to pricing_calculator.html
+        if self.path in ("/", ""):
+            self.path = "/pricing_calculator.html"
+
+        # Provide clean SVG favicon to prevent 404 logs
+        if self.path == "/favicon.ico":
+            self.send_response(200)
+            self.send_header("Content-Type", "image/svg+xml")
+            self.send_header("Content-Length", str(len(FAVICON_SVG)))
+            self.send_header("Cache-Control", "public, max-age=86400")
+            self.end_headers()
+            self.wfile.write(FAVICON_SVG)
+            return
+
+        return super().do_GET()
+
     def log_message(self, format, *args):
-        # Clean logging
-        sys.stderr.write(f"[Capella AI WebUI] {self.address_string()} - {format % args}\n")
+        # Filter out repetitive favicon or asset noise
+        msg = format % args
+        if "favicon.ico" not in msg:
+            sys.stderr.write(f"[Capella AI WebUI] {self.address_string()} - {msg}\n")
 
 
-def open_browser(url: str, delay: float = 1.0):
+def open_browser(url: str, delay: float = 0.8):
     time.sleep(delay)
     print(f"Opening {url} in your browser...")
     webbrowser.open(url)
@@ -43,14 +67,14 @@ def main():
     args = parser.parse_args()
 
     port = args.port
-    url = f"http://localhost:{port}/pricing_calculator.html"
+    url = f"http://localhost:{port}/"
 
     # Find open port if 8080 is in use
     for p in range(port, port + 10):
         try:
-            server = socketserver.TCPServer(("", p), Handler)
+            server = socketserver.TCPServer(("", p), CapellaWebUIHandler)
             port = p
-            url = f"http://localhost:{port}/pricing_calculator.html"
+            url = f"http://localhost:{port}/"
             break
         except OSError:
             continue
